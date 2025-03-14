@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, ShoppingCart, User, Menu, LogOut } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, LogOut, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -119,9 +119,22 @@ const Header = ({
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Hi, {user?.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Orders</DropdownMenuItem>
-                <DropdownMenuItem>Wishlist</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                  <User className="mr-2 h-4 w-4" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile?tab=orders")}
+                >
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  Orders
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => navigate("/profile?tab=wishlist")}
+                >
+                  <Heart className="mr-2 h-4 w-4" />
+                  Wishlist
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
                   <LogOut className="mr-2 h-4 w-4" />
@@ -188,24 +201,24 @@ const Header = ({
           <div className="space-y-2">
             {isAuthenticated ? (
               <>
-                <a
-                  href="/profile"
-                  className="block p-2 hover:bg-gray-100 rounded-md"
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="w-full text-left block p-2 hover:bg-gray-100 rounded-md"
                 >
                   Profile
-                </a>
-                <a
-                  href="/orders"
-                  className="block p-2 hover:bg-gray-100 rounded-md"
+                </button>
+                <button
+                  onClick={() => navigate("/profile?tab=orders")}
+                  className="w-full text-left block p-2 hover:bg-gray-100 rounded-md"
                 >
                   Orders
-                </a>
-                <a
-                  href="/wishlist"
-                  className="block p-2 hover:bg-gray-100 rounded-md"
+                </button>
+                <button
+                  onClick={() => navigate("/profile?tab=wishlist")}
+                  className="w-full text-left block p-2 hover:bg-gray-100 rounded-md"
                 >
                   Wishlist
-                </a>
+                </button>
                 <button
                   onClick={signOut}
                   className="w-full text-left block p-2 hover:bg-gray-100 rounded-md"

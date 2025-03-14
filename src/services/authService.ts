@@ -116,4 +116,53 @@ export const authService = {
   isAuthenticated: (): boolean => {
     return !!authService.getCurrentUser();
   },
+
+  // Update user profile
+  updateUserProfile: async (
+    userId: string,
+    name: string,
+    avatarSeed?: string,
+  ): Promise<boolean> => {
+    try {
+      const profileData: { name?: string; avatarSeed?: string } = {};
+      if (name) profileData.name = name;
+      if (avatarSeed) profileData.avatarSeed = avatarSeed;
+
+      return db.updateUserProfile(userId, profileData);
+    } catch (error) {
+      console.error("Update profile error:", error);
+      return false;
+    }
+  },
+
+  // Change user password
+  changePassword: async (
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<{ success: boolean; message?: string }> => {
+    try {
+      // Get user to verify current password
+      const user = db.getUserById(userId);
+      if (!user) {
+        return { success: false, message: "User not found" };
+      }
+
+      // Verify current password
+      if (user.password !== currentPassword) {
+        return { success: false, message: "Current password is incorrect" };
+      }
+
+      // Update password
+      const result = db.updateUserPassword(userId, newPassword);
+      if (result) {
+        return { success: true };
+      } else {
+        return { success: false, message: "Failed to update password" };
+      }
+    } catch (error) {
+      console.error("Change password error:", error);
+      return { success: false, message: "An error occurred" };
+    }
+  },
 };

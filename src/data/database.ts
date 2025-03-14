@@ -30,11 +30,38 @@ export interface CartItem {
   price: number;
 }
 
+export interface WishlistItem {
+  id: string;
+  userId: string;
+  productId: string;
+  createdAt: Date;
+}
+
+export interface OrderItem {
+  id: string;
+  orderId: string;
+  productId: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  total: number;
+  status: string; // "processing", "shipped", "delivered", "cancelled"
+  shippingAddress: string;
+  paymentMethod: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
   password: string; // In a real app, this would be hashed
+  avatarSeed?: string;
   createdAt: Date;
 }
 
@@ -640,6 +667,77 @@ export const cartItems: CartItem[] = [
   },
 ];
 
+// Wishlist items table
+export const wishlistItems: WishlistItem[] = [
+  {
+    id: "1",
+    userId: "1",
+    productId: "5",
+    createdAt: new Date("2023-05-15"),
+  },
+  {
+    id: "2",
+    userId: "1",
+    productId: "9",
+    createdAt: new Date("2023-06-20"),
+  },
+  {
+    id: "3",
+    userId: "2",
+    productId: "3",
+    createdAt: new Date("2023-07-10"),
+  },
+];
+
+// Order items table
+export const orderItems: OrderItem[] = [
+  {
+    id: "1",
+    orderId: "1",
+    productId: "1",
+    quantity: 1,
+    price: 999.99,
+  },
+  {
+    id: "2",
+    orderId: "1",
+    productId: "4",
+    quantity: 2,
+    price: 249.99,
+  },
+  {
+    id: "3",
+    orderId: "2",
+    productId: "2",
+    quantity: 1,
+    price: 1999.99,
+  },
+];
+
+// Orders table
+export const orders: Order[] = [
+  {
+    id: "1",
+    userId: "1",
+    total: 1499.97,
+    status: "delivered",
+    shippingAddress: "123 Main St, Anytown, USA",
+    paymentMethod: "Credit Card",
+    createdAt: new Date("2023-04-15"),
+    updatedAt: new Date("2023-04-18"),
+  },
+  {
+    id: "2",
+    userId: "1",
+    total: 1999.99,
+    status: "processing",
+    shippingAddress: "123 Main St, Anytown, USA",
+    paymentMethod: "PayPal",
+    createdAt: new Date("2023-07-20"),
+    updatedAt: new Date("2023-07-20"),
+  },
+];
+
 // Users table
 export const users: User[] = [
   {
@@ -647,6 +745,7 @@ export const users: User[] = [
     name: "John Doe",
     email: "john@example.com",
     password: "Password123", // In a real app, this would be hashed
+    avatarSeed: "john123",
     createdAt: new Date("2023-01-01"),
   },
   {
@@ -654,6 +753,7 @@ export const users: User[] = [
     name: "Jane Smith",
     email: "jane@example.com",
     password: "Password123", // In a real app, this would be hashed
+    avatarSeed: "jane456",
     createdAt: new Date("2023-02-15"),
   },
 ];
@@ -771,9 +871,182 @@ export const db = {
       name,
       email,
       password, // In a real app, this would be hashed
+      avatarSeed: Math.random().toString(36).substring(2, 8),
       createdAt: new Date(),
     };
     users.push(newUser);
     return newUser;
+  },
+  updateUserProfile: (
+    userId: string,
+    profileData: { name?: string; avatarSeed?: string },
+  ) => {
+    const user = users.find((user) => user.id === userId);
+    if (!user) return false;
+
+    if (profileData.name) user.name = profileData.name;
+    if (profileData.avatarSeed) user.avatarSeed = profileData.avatarSeed;
+
+    return true;
+  },
+  updateUserPassword: (userId: string, newPassword: string) => {
+    const user = users.find((user) => user.id === userId);
+    if (!user) return false;
+
+    user.password = newPassword;
+    return true;
+  },
+  deleteUser: (userId: string) => {
+    const index = users.findIndex((user) => user.id === userId);
+    if (index === -1) return false;
+
+    users.splice(index, 1);
+    return true;
+  },
+
+  // Wishlist operations
+  getUserWishlist: (userId: string) => {
+    const userWishlistItems = wishlistItems.filter(
+      (item) => item.userId === userId,
+    );
+    return userWishlistItems.map((item) => {
+      const product = products.find((p) => p.id === item.productId);
+      return product!;
+    });
+  },
+  addToWishlist: (userId: string, productId: string) => {
+    // Check if product exists
+    const product = products.find((p) => p.id === productId);
+    if (!product) return false;
+
+    // Check if already in wishlist
+    const existingItem = wishlistItems.find(
+      (item) => item.userId === userId && item.productId === productId,
+    );
+    if (existingItem) return true;
+
+    // Add to wishlist
+    const newItem = {
+      id: (wishlistItems.length + 1).toString(),
+      userId,
+      productId,
+      createdAt: new Date(),
+    };
+    wishlistItems.push(newItem);
+    return true;
+  },
+  removeFromWishlist: (userId: string, productId: string) => {
+    const index = wishlistItems.findIndex(
+      (item) => item.userId === userId && item.productId === productId,
+    );
+    if (index === -1) return false;
+
+    wishlistItems.splice(index, 1);
+    return true;
+  },
+  isInWishlist: (userId: string, productId: string) => {
+    return wishlistItems.some(
+      (item) => item.userId === userId && item.productId === productId,
+    );
+  },
+
+  // Order operations
+  getUserOrders: (userId: string) => {
+    const userOrders = orders.filter((order) => order.userId === userId);
+    return userOrders.map((order) => {
+      const items = orderItems
+        .filter((item) => item.orderId === order.id)
+        .map((item) => {
+          const product = products.find((p) => p.id === item.productId)!;
+          return {
+            ...item,
+            product,
+          };
+        });
+      return { ...order, items };
+    });
+  },
+  getOrderById: (orderId: string) => {
+    const order = orders.find((order) => order.id === orderId);
+    if (!order) return null;
+
+    const items = orderItems
+      .filter((item) => item.orderId === orderId)
+      .map((item) => {
+        const product = products.find((p) => p.id === item.productId)!;
+        return {
+          ...item,
+          product,
+        };
+      });
+
+    return { ...order, items };
+  },
+  createOrder: (
+    userId: string,
+    items: { productId: string; quantity: number }[],
+    shippingAddress: string,
+    paymentMethod: string,
+  ) => {
+    // Check if user exists
+    const user = users.find((user) => user.id === userId);
+    if (!user) return null;
+
+    // Calculate total and create order items
+    let total = 0;
+    const newOrderItems: OrderItem[] = [];
+
+    for (const item of items) {
+      const product = products.find((p) => p.id === item.productId);
+      if (!product) continue;
+
+      const price = product.price;
+      total += price * item.quantity;
+
+      newOrderItems.push({
+        id: (orderItems.length + 1).toString(),
+        orderId: (orders.length + 1).toString(),
+        productId: item.productId,
+        quantity: item.quantity,
+        price,
+      });
+    }
+
+    if (newOrderItems.length === 0) return null;
+
+    // Create order
+    const newOrder: Order = {
+      id: (orders.length + 1).toString(),
+      userId,
+      total,
+      status: "processing",
+      shippingAddress,
+      paymentMethod,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    orders.push(newOrder);
+    orderItems.push(...newOrderItems);
+
+    // Return order with items
+    return {
+      ...newOrder,
+      items: newOrderItems.map((item) => {
+        const product = products.find((p) => p.id === item.productId)!;
+        return {
+          ...item,
+          product,
+        };
+      }),
+    };
+  },
+  updateOrderStatus: (orderId: string, status: string) => {
+    const order = orders.find((order) => order.id === orderId);
+    if (!order) return false;
+
+    order.status = status;
+    order.updatedAt = new Date();
+    return true;
   },
 };
