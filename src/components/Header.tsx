@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
@@ -18,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useAuth } from "../contexts/AuthContext";
 
 interface HeaderProps {
   onCartClick?: () => void;
@@ -32,6 +34,8 @@ const Header = ({
 }: HeaderProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,25 +102,38 @@ const Header = ({
             </Tooltip>
           </TooltipProvider>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Avatar>
-                  <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user123" />
-                  <AvatarFallback>U</AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Orders</DropdownMenuItem>
-              <DropdownMenuItem>Wishlist</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Log out</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Avatar>
+                    <AvatarImage
+                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id || "user"}`}
+                    />
+                    <AvatarFallback>
+                      {user?.name?.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Hi, {user?.name}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Orders</DropdownMenuItem>
+                <DropdownMenuItem>Wishlist</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button variant="outline" onClick={() => navigate("/signin")}>
+              Sign In
+            </Button>
+          )}
         </div>
 
         {/* Mobile Navigation */}
@@ -169,30 +186,49 @@ const Header = ({
             </Button>
           </form>
           <div className="space-y-2">
-            <a
-              href="/profile"
-              className="block p-2 hover:bg-gray-100 rounded-md"
-            >
-              Profile
-            </a>
-            <a
-              href="/orders"
-              className="block p-2 hover:bg-gray-100 rounded-md"
-            >
-              Orders
-            </a>
-            <a
-              href="/wishlist"
-              className="block p-2 hover:bg-gray-100 rounded-md"
-            >
-              Wishlist
-            </a>
-            <a
-              href="/logout"
-              className="block p-2 hover:bg-gray-100 rounded-md"
-            >
-              Log out
-            </a>
+            {isAuthenticated ? (
+              <>
+                <a
+                  href="/profile"
+                  className="block p-2 hover:bg-gray-100 rounded-md"
+                >
+                  Profile
+                </a>
+                <a
+                  href="/orders"
+                  className="block p-2 hover:bg-gray-100 rounded-md"
+                >
+                  Orders
+                </a>
+                <a
+                  href="/wishlist"
+                  className="block p-2 hover:bg-gray-100 rounded-md"
+                >
+                  Wishlist
+                </a>
+                <button
+                  onClick={signOut}
+                  className="w-full text-left block p-2 hover:bg-gray-100 rounded-md"
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate("/signin")}
+                  className="w-full text-left block p-2 hover:bg-gray-100 rounded-md"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="w-full text-left block p-2 hover:bg-gray-100 rounded-md"
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

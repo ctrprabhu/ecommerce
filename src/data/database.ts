@@ -30,6 +30,14 @@ export interface CartItem {
   price: number;
 }
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string; // In a real app, this would be hashed
+  createdAt: Date;
+}
+
 // Categories table
 export const categories: Category[] = [
   { id: "all", name: "All Products", slug: "all" },
@@ -632,6 +640,24 @@ export const cartItems: CartItem[] = [
   },
 ];
 
+// Users table
+export const users: User[] = [
+  {
+    id: "1",
+    name: "John Doe",
+    email: "john@example.com",
+    password: "Password123", // In a real app, this would be hashed
+    createdAt: new Date("2023-01-01"),
+  },
+  {
+    id: "2",
+    name: "Jane Smith",
+    email: "jane@example.com",
+    password: "Password123", // In a real app, this would be hashed
+    createdAt: new Date("2023-02-15"),
+  },
+];
+
 // Database service to simulate database operations
 export const db = {
   // Product operations
@@ -728,5 +754,26 @@ export const db = {
       (total, item) => total + item.price * item.quantity,
       0,
     );
+  },
+
+  // User operations
+  getUsers: () => users,
+  getUserById: (id: string) => users.find((user) => user.id === id),
+  getUserByEmail: (email: string) => users.find((user) => user.email === email),
+  createUser: (name: string, email: string, password: string) => {
+    // Check if user with email already exists
+    const existingUser = users.find((user) => user.email === email);
+    if (existingUser) return null;
+
+    // Create new user
+    const newUser = {
+      id: (users.length + 1).toString(),
+      name,
+      email,
+      password, // In a real app, this would be hashed
+      createdAt: new Date(),
+    };
+    users.push(newUser);
+    return newUser;
   },
 };
