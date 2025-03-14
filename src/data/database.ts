@@ -12,6 +12,7 @@ export interface Product {
   specifications: Record<string, string>;
   images: string[];
   inStock: boolean;
+  brand: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -62,6 +63,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80",
       "https://images.unsplash.com/photo-1565536421961-1f165e0c981e?w=600&q=80",
     ],
+    brand: "Apple",
     inStock: true,
     createdAt: new Date("2023-01-15"),
     updatedAt: new Date("2023-01-15"),
@@ -88,6 +90,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&q=80",
       "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=600&q=80",
     ],
+    brand: "Apple",
     inStock: true,
     createdAt: new Date("2023-02-10"),
     updatedAt: new Date("2023-02-10"),
@@ -114,6 +117,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1557825835-70d97c4aa567?w=600&q=80",
       "https://images.unsplash.com/photo-1569770218135-bea267ed7e84?w=600&q=80",
     ],
+    brand: "Apple",
     inStock: true,
     createdAt: new Date("2023-03-05"),
     updatedAt: new Date("2023-03-05"),
@@ -140,6 +144,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=600&q=80",
       "https://images.unsplash.com/photo-1603351154351-5e2d0600bb77?w=600&q=80",
     ],
+    brand: "Apple",
     inStock: true,
     createdAt: new Date("2023-04-20"),
     updatedAt: new Date("2023-04-20"),
@@ -166,6 +171,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600&q=80",
       "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80",
     ],
+    brand: "Samsung",
     inStock: true,
     createdAt: new Date("2023-05-12"),
     updatedAt: new Date("2023-05-12"),
@@ -192,6 +198,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&q=80",
       "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&q=80",
     ],
+    brand: "Dell",
     inStock: true,
     createdAt: new Date("2023-06-08"),
     updatedAt: new Date("2023-06-08"),
@@ -218,6 +225,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1589739900243-4b52cd9dd8df?w=600&q=80",
       "https://images.unsplash.com/photo-1589739900243-4b52cd9dd8df?w=600&q=80",
     ],
+    brand: "Samsung",
     inStock: true,
     createdAt: new Date("2023-07-15"),
     updatedAt: new Date("2023-07-15"),
@@ -244,6 +252,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1628815113969-0487917fc6a1?w=600&q=80",
       "https://images.unsplash.com/photo-1628815113969-0487917fc6a1?w=600&q=80",
     ],
+    brand: "Anker",
     inStock: true,
     createdAt: new Date("2023-08-20"),
     updatedAt: new Date("2023-08-20"),
@@ -270,6 +279,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1598965402089-897e8f3362c0?w=600&q=80",
       "https://images.unsplash.com/photo-1598965402089-897e8f3362c0?w=600&q=80",
     ],
+    brand: "Google",
     inStock: true,
     createdAt: new Date("2023-09-05"),
     updatedAt: new Date("2023-09-05"),
@@ -296,6 +306,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1593642634524-b40b5baae6bb?w=600&q=80",
       "https://images.unsplash.com/photo-1593642634524-b40b5baae6bb?w=600&q=80",
     ],
+    brand: "HP",
     inStock: true,
     createdAt: new Date("2023-10-10"),
     updatedAt: new Date("2023-10-10"),
@@ -322,6 +333,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1557825835-70d97c4aa567?w=600&q=80",
       "https://images.unsplash.com/photo-1569770218135-bea267ed7e84?w=600&q=80",
     ],
+    brand: "Apple",
     inStock: true,
     createdAt: new Date("2023-11-15"),
     updatedAt: new Date("2023-11-15"),
@@ -348,6 +360,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&q=80",
       "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&q=80",
     ],
+    brand: "Bose",
     inStock: true,
     createdAt: new Date("2023-12-01"),
     updatedAt: new Date("2023-12-01"),
@@ -374,6 +387,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80",
       "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80",
     ],
+    brand: "OnePlus",
     inStock: false,
     createdAt: new Date("2024-01-05"),
     updatedAt: new Date("2024-01-05"),
@@ -400,6 +414,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1593642532400-2682810df593?w=600&q=80",
       "https://images.unsplash.com/photo-1593642532400-2682810df593?w=600&q=80",
     ],
+    brand: "Lenovo",
     inStock: true,
     createdAt: new Date("2024-02-10"),
     updatedAt: new Date("2024-02-10"),
@@ -426,6 +441,7 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1628815113969-0487917fc6a1?w=600&q=80",
       "https://images.unsplash.com/photo-1628815113969-0487917fc6a1?w=600&q=80",
     ],
+    brand: "Microsoft",
     inStock: true,
     createdAt: new Date("2024-03-15"),
     updatedAt: new Date("2024-03-15"),
@@ -452,9 +468,145 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&q=80",
       "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&q=80",
     ],
+    brand: "Sony",
     inStock: true,
     createdAt: new Date("2024-04-01"),
     updatedAt: new Date("2024-04-01"),
+  },
+  {
+    id: "17",
+    name: "ASUS ROG Zephyrus G14",
+    price: 1499.99,
+    rating: 4.7,
+    image:
+      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400&q=80",
+    category: "laptops",
+    description:
+      "The ASUS ROG Zephyrus G14 is a powerful gaming laptop with AMD Ryzen 9 processor, NVIDIA RTX graphics, and a compact design.",
+    specifications: {
+      Display: "14-inch QHD 120Hz",
+      Processor: "AMD Ryzen 9 5900HS",
+      Graphics: "NVIDIA GeForce RTX 3060",
+      Memory: "16GB DDR4",
+      Storage: "1TB NVMe SSD",
+    },
+    images: [
+      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=600&q=80",
+      "https://images.unsplash.com/photo-1593642702749-b7d2a804fbcf?w=600&q=80",
+      "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=600&q=80",
+    ],
+    brand: "ASUS",
+    inStock: true,
+    createdAt: new Date("2024-01-20"),
+    updatedAt: new Date("2024-01-20"),
+  },
+  {
+    id: "18",
+    name: "Razer Blade 15",
+    price: 1999.99,
+    rating: 4.5,
+    image:
+      "https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=400&q=80",
+    category: "laptops",
+    description:
+      "The Razer Blade 15 is a premium gaming laptop with a sleek aluminum chassis, powerful components, and a vibrant display.",
+    specifications: {
+      Display: "15.6-inch FHD 360Hz",
+      Processor: "Intel Core i7-11800H",
+      Graphics: "NVIDIA GeForce RTX 3080",
+      Memory: "32GB DDR4",
+      Storage: "1TB NVMe SSD",
+    },
+    images: [
+      "https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=600&q=80",
+      "https://images.unsplash.com/photo-1525971977907-b3321e8d032d?w=600&q=80",
+      "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=600&q=80",
+    ],
+    brand: "Razer",
+    inStock: true,
+    createdAt: new Date("2024-02-15"),
+    updatedAt: new Date("2024-02-15"),
+  },
+  {
+    id: "19",
+    name: "Acer Predator Helios 300",
+    price: 1299.99,
+    rating: 4.3,
+    image:
+      "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&q=80",
+    category: "laptops",
+    description:
+      "The Acer Predator Helios 300 is a powerful gaming laptop with a high refresh rate display, advanced cooling, and customizable RGB lighting.",
+    specifications: {
+      Display: "15.6-inch FHD 144Hz",
+      Processor: "Intel Core i7-11800H",
+      Graphics: "NVIDIA GeForce RTX 3060",
+      Memory: "16GB DDR4",
+      Storage: "512GB NVMe SSD",
+    },
+    images: [
+      "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600&q=80",
+      "https://images.unsplash.com/photo-1593642634443-44adaa06623a?w=600&q=80",
+      "https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=600&q=80",
+    ],
+    brand: "Acer",
+    inStock: true,
+    createdAt: new Date("2024-03-01"),
+    updatedAt: new Date("2024-03-01"),
+  },
+  {
+    id: "20",
+    name: "MSI GS66 Stealth",
+    price: 1799.99,
+    rating: 4.6,
+    image:
+      "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&q=80",
+    category: "laptops",
+    description:
+      "The MSI GS66 Stealth is a sleek gaming laptop with a thin profile, powerful performance, and a stunning display for immersive gaming.",
+    specifications: {
+      Display: "15.6-inch QHD 240Hz",
+      Processor: "Intel Core i9-11900H",
+      Graphics: "NVIDIA GeForce RTX 3070",
+      Memory: "32GB DDR4",
+      Storage: "1TB NVMe SSD",
+    },
+    images: [
+      "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=600&q=80",
+      "https://images.unsplash.com/photo-1629429408209-1f912961dbd8?w=600&q=80",
+      "https://images.unsplash.com/photo-1629429407756-28d34d2e30b8?w=600&q=80",
+    ],
+    brand: "MSI",
+    inStock: true,
+    createdAt: new Date("2024-03-20"),
+    updatedAt: new Date("2024-03-20"),
+  },
+  {
+    id: "21",
+    name: "Alienware m15 R6",
+    price: 2199.99,
+    rating: 4.7,
+    image:
+      "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&q=80",
+    category: "laptops",
+    description:
+      "The Alienware m15 R6 is a high-performance gaming laptop with advanced cooling technology, premium build quality, and customizable lighting.",
+    specifications: {
+      Display: "15.6-inch QHD 240Hz",
+      Processor: "Intel Core i9-11900H",
+      Graphics: "NVIDIA GeForce RTX 3080",
+      Memory: "32GB DDR4",
+      Storage: "2TB NVMe SSD",
+    },
+    images: [
+      "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=600&q=80",
+      "https://images.unsplash.com/photo-1629429407756-28d34d2e30b8?w=600&q=80",
+      "https://images.unsplash.com/photo-1629429408209-1f912961dbd8?w=600&q=80",
+    ],
+    brand: "Dell",
+    inStock: true,
+    createdAt: new Date("2024-04-05"),
+    updatedAt: new Date("2024-04-05"),
   },
 ];
 
@@ -489,6 +641,15 @@ export const db = {
     categoryId === "all"
       ? products
       : products.filter((product) => product.category === categoryId),
+  getProductsByBrand: (brand: string) =>
+    products.filter((product) => product.brand === brand),
+  getBrands: () => {
+    const brands = new Set(products.map((product) => product.brand));
+    return Array.from(brands).map((brand) => ({
+      id: brand.toLowerCase(),
+      name: brand,
+    }));
+  },
   searchProducts: (query: string) =>
     products.filter(
       (product) =>
@@ -509,6 +670,8 @@ export const db = {
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
+      case "brand":
+        return sortedProducts.sort((a, b) => a.brand.localeCompare(b.brand));
       default:
         return sortedProducts;
     }

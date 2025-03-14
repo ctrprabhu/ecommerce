@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowDownAZ, ArrowUpAZ, Star, Clock } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, Star, Clock, Tag } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -62,6 +62,12 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                 <span>Newest</span>
               </div>
             </SelectItem>
+            <SelectItem value="brand">
+              <div className="flex items-center">
+                <Tag className="mr-2 h-4 w-4" />
+                <span>Brand</span>
+              </div>
+            </SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -102,6 +108,15 @@ const SortOptions: React.FC<SortOptionsProps> = ({
         >
           <Clock className="mr-2 h-4 w-4" />
           Newest
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className={activeSort === "brand" ? "bg-primary/10" : ""}
+          onClick={() => handleSortChange("brand")}
+        >
+          <Tag className="mr-2 h-4 w-4" />
+          Brand
         </Button>
       </div>
     </div>

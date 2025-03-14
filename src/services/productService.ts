@@ -17,6 +17,16 @@ export const productService = {
     return db.getProductsByCategory(categoryId);
   },
 
+  // Get products by brand
+  getProductsByBrand: (brand: string): Product[] => {
+    return db.getProductsByBrand(brand);
+  },
+
+  // Get all brands
+  getAllBrands: () => {
+    return [{ id: "all", name: "All Brands" }, ...db.getBrands()];
+  },
+
   // Search products
   searchProducts: (query: string): Product[] => {
     return db.searchProducts(query);

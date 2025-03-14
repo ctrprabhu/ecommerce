@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import CategoryFilter from "./CategoryFilter";
+import BrandFilter from "./BrandFilter";
 import SortOptions from "./SortOptions";
 import ProductGrid from "./ProductGrid";
 import QuickViewModal from "./QuickViewModal";
@@ -15,8 +16,9 @@ import { categoryService } from "../services/categoryService";
 import { Product } from "../data/database";
 
 const Home = () => {
-  // State for category and sorting
+  // State for category, brand, and sorting
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
   const [sortOption, setSortOption] = useState("popularity");
   const [showAllProducts, setShowAllProducts] = useState(false);
 
@@ -41,15 +43,21 @@ const Home = () => {
     updateCartState();
   }, []);
 
-  // Update filtered products when category or sort option changes
+  // Update filtered products when category, brand, or sort option changes
   useEffect(() => {
-    let filtered = selectedCategory
-      ? productService.getProductsByCategory(selectedCategory)
-      : products;
+    let filtered = products;
+
+    if (selectedCategory) {
+      filtered = productService.getProductsByCategory(selectedCategory);
+    }
+
+    if (selectedBrand) {
+      filtered = filtered.filter((product) => product.brand === selectedBrand);
+    }
 
     filtered = productService.sortProducts(filtered, sortOption);
     setFilteredProducts(filtered);
-  }, [selectedCategory, sortOption, products]);
+  }, [selectedCategory, selectedBrand, sortOption, products]);
 
   // Update cart items when cart changes
   const updateCartState = () => {
@@ -68,6 +76,11 @@ const Home = () => {
   // Handlers for user interactions
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId === "all" ? "" : categoryId);
+    setShowAllProducts(true);
+  };
+
+  const handleBrandChange = (brandId: string) => {
+    setSelectedBrand(brandId);
     setShowAllProducts(true);
   };
 
@@ -163,6 +176,12 @@ const Home = () => {
           <CategoryFilter
             categories={categoryService.getAllCategories()}
             onCategoryChange={handleCategoryChange}
+          />
+
+          {/* Brand Filter */}
+          <BrandFilter
+            brands={productService.getAllBrands()}
+            onBrandChange={handleBrandChange}
           />
 
           {/* Main Content */}
