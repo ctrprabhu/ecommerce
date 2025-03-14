@@ -5,6 +5,10 @@ import SortOptions from "./SortOptions";
 import ProductGrid from "./ProductGrid";
 import QuickViewModal from "./QuickViewModal";
 import CartDrawer from "./CartDrawer";
+import HeroSection from "./HeroSection";
+import FeaturedProducts from "./FeaturedProducts";
+import PromoSection from "./PromoSection";
+import Footer from "./Footer";
 import { productService } from "../services/productService";
 import { cartService } from "../services/cartService";
 import { categoryService } from "../services/categoryService";
@@ -14,23 +18,27 @@ const Home = () => {
   // State for category and sorting
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState("popularity");
+  const [showAllProducts, setShowAllProducts] = useState(false);
 
   // State for products
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
 
   // State for modals and drawers
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [cartItems, setCartItems] = useState<any[]>([]);
 
   // Load products on component mount
   useEffect(() => {
     const allProducts = productService.getAllProducts();
     setProducts(allProducts);
     setFilteredProducts(productService.sortProducts(allProducts, sortOption));
-    setCartItemCount(cartService.getCartItemCount());
+    setFeaturedProducts(productService.getFeaturedProducts(4));
+    updateCartState();
   }, []);
 
   // Update filtered products when category or sort option changes
@@ -43,9 +51,24 @@ const Home = () => {
     setFilteredProducts(filtered);
   }, [selectedCategory, sortOption, products]);
 
+  // Update cart items when cart changes
+  const updateCartState = () => {
+    setCartItemCount(cartService.getCartItemCount());
+    setCartItems(
+      cartService.getCartItems().map((item) => ({
+        id: item.id,
+        name: item.product.name,
+        price: item.product.price,
+        image: item.product.image,
+        quantity: item.quantity,
+      })),
+    );
+  };
+
   // Handlers for user interactions
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId === "all" ? "" : categoryId);
+    setShowAllProducts(true);
   };
 
   const handleSortChange = (sortOption: string) => {
@@ -62,8 +85,22 @@ const Home = () => {
 
   const handleAddToCart = (productId: string) => {
     cartService.addToCart(productId, 1);
-    setCartItemCount(cartService.getCartItemCount());
+    updateCartState();
     setIsCartOpen(true);
+  };
+
+  const handleUpdateCartItem = (id: string, quantity: number) => {
+    if (quantity <= 0) {
+      cartService.removeFromCart(id);
+    } else {
+      cartService.updateCartItem(id, quantity);
+    }
+    updateCartState();
+  };
+
+  const handleRemoveFromCart = (id: string) => {
+    cartService.removeFromCart(id);
+    updateCartState();
   };
 
   const handleCartClick = () => {
@@ -81,7 +118,18 @@ const Home = () => {
     } else {
       const searchResults = productService.searchProducts(query);
       setFilteredProducts(searchResults);
+      setShowAllProducts(true);
     }
+  };
+
+  const handleShopNow = () => {
+    setShowAllProducts(true);
+    window.scrollTo({ top: 500, behavior: "smooth" });
+  };
+
+  const handleViewAllProducts = () => {
+    setShowAllProducts(true);
+    window.scrollTo({ top: 500, behavior: "smooth" });
   };
 
   return (
@@ -93,28 +141,51 @@ const Home = () => {
         onSearchSubmit={handleSearchSubmit}
       />
 
-      {/* Category Filter */}
-      <CategoryFilter
-        categories={categoryService.getAllCategories()}
-        onCategoryChange={handleCategoryChange}
-      />
+      {!showAllProducts ? (
+        <>
+          {/* Hero Section */}
+          <HeroSection onCtaClick={handleShopNow} />
 
-      {/* Main Content */}
-      <main className="flex-1 container mx-auto px-4 py-6">
-        {/* Sort Options */}
-        <div className="mb-6">
-          <SortOptions onSortChange={handleSortChange} />
-        </div>
+          {/* Featured Products */}
+          <FeaturedProducts
+            products={featuredProducts}
+            onViewAll={handleViewAllProducts}
+            onQuickView={handleQuickView}
+            onAddToCart={handleAddToCart}
+          />
 
-        {/* Product Grid */}
-        <ProductGrid
-          products={filteredProducts}
-          selectedCategory={selectedCategory}
-          sortOption={sortOption}
-          onQuickView={handleQuickView}
-          onAddToCart={handleAddToCart}
-        />
-      </main>
+          {/* Promo Section */}
+          <PromoSection onCtaClick={handleViewAllProducts} />
+        </>
+      ) : (
+        <>
+          {/* Category Filter */}
+          <CategoryFilter
+            categories={categoryService.getAllCategories()}
+            onCategoryChange={handleCategoryChange}
+          />
+
+          {/* Main Content */}
+          <main className="flex-1 container mx-auto px-4 py-6">
+            {/* Sort Options */}
+            <div className="mb-6">
+              <SortOptions onSortChange={handleSortChange} />
+            </div>
+
+            {/* Product Grid */}
+            <ProductGrid
+              products={filteredProducts}
+              selectedCategory={selectedCategory}
+              sortOption={sortOption}
+              onQuickView={handleQuickView}
+              onAddToCart={handleAddToCart}
+            />
+          </main>
+        </>
+      )}
+
+      {/* Footer */}
+      <Footer />
 
       {/* Quick View Modal */}
       <QuickViewModal
@@ -126,16 +197,12 @@ const Home = () => {
 
       {/* Cart Drawer */}
       <CartDrawer
-        items={cartService.getCartItems().map((item) => ({
-          id: item.id,
-          name: item.product.name,
-          price: item.product.price,
-          image: item.product.image,
-          quantity: item.quantity,
-        }))}
+        items={cartItems}
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         onCheckout={handleCheckout}
+        onUpdateQuantity={handleUpdateCartItem}
+        onRemoveItem={handleRemoveFromCart}
       />
     </div>
   );

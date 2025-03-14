@@ -11,6 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./ui/drawer";
+import { Badge } from "./ui/badge";
 
 interface CartItem {
   id: string;
@@ -25,6 +26,8 @@ interface CartDrawerProps {
   isOpen?: boolean;
   onClose?: () => void;
   onCheckout?: () => void;
+  onUpdateQuantity?: (id: string, quantity: number) => void;
+  onRemoveItem?: (id: string) => void;
 }
 
 const CartDrawer = ({
@@ -57,6 +60,8 @@ const CartDrawer = ({
   isOpen = false,
   onClose = () => {},
   onCheckout = () => {},
+  onUpdateQuantity = () => {},
+  onRemoveItem = () => {},
 }: CartDrawerProps) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce(
@@ -64,15 +69,30 @@ const CartDrawer = ({
     0,
   );
 
+  const handleIncreaseQuantity = (id: string, currentQuantity: number) => {
+    onUpdateQuantity(id, currentQuantity + 1);
+  };
+
+  const handleDecreaseQuantity = (id: string, currentQuantity: number) => {
+    onUpdateQuantity(id, currentQuantity - 1);
+  };
+
+  const handleRemoveItem = (id: string) => {
+    onRemoveItem(id);
+  };
+
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerTrigger asChild>
         <Button variant="ghost" className="relative p-2 bg-white">
           <ShoppingCart className="h-6 w-6" />
           {totalItems > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            <Badge
+              variant="destructive"
+              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+            >
               {totalItems}
-            </span>
+            </Badge>
           )}
         </Button>
       </DrawerTrigger>
@@ -100,8 +120,11 @@ const CartDrawer = ({
           ) : (
             <div className="space-y-4">
               {items.map((item) => (
-                <div key={item.id} className="flex items-start space-x-4 py-3">
-                  <div className="h-20 w-20 rounded-md overflow-hidden flex-shrink-0">
+                <div
+                  key={item.id}
+                  className="flex items-start space-x-4 py-3 border-b border-gray-100 last:border-0"
+                >
+                  <div className="h-20 w-20 rounded-md overflow-hidden flex-shrink-0 bg-gray-50">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -114,11 +137,25 @@ const CartDrawer = ({
                       ${item.price.toFixed(2)}
                     </p>
                     <div className="flex items-center mt-2">
-                      <Button variant="outline" size="icon" className="h-7 w-7">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={() =>
+                          handleDecreaseQuantity(item.id, item.quantity)
+                        }
+                      >
                         <Minus className="h-3 w-3" />
                       </Button>
                       <span className="mx-2 text-sm">{item.quantity}</span>
-                      <Button variant="outline" size="icon" className="h-7 w-7">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={() =>
+                          handleIncreaseQuantity(item.id, item.quantity)
+                        }
+                      >
                         <Plus className="h-3 w-3" />
                       </Button>
                     </div>
@@ -131,6 +168,7 @@ const CartDrawer = ({
                       variant="ghost"
                       size="icon"
                       className="text-red-500 h-7 w-7"
+                      onClick={() => handleRemoveItem(item.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -174,7 +212,7 @@ const CartDrawer = ({
           <Button
             onClick={onCheckout}
             disabled={items.length === 0}
-            className="w-full"
+            className="w-full bg-primary hover:bg-primary/90"
           >
             Checkout
           </Button>
